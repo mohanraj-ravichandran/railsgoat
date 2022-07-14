@@ -23,10 +23,13 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
-  def update
+  def update(sort_by="ASC")
     message = false
+    order_clause = "#{sort_by}"
 
+    # user = User.where("id = '#{params[:user][:id]}'")[0]
     user = User.where("id = '#{params[:user][:id]}'")[0]
+    all_user = User.where("id = '#{params[:user][:id]}'").order(order_clause)
 
     if user
       user.update(user_params_without_password)
