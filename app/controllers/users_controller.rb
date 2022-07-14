@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class UsersController < ApplicationController
+  include UsersHelper
   skip_before_action :has_info
   skip_before_action :authenticated, only: [:new, :create]
 
@@ -23,13 +24,13 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
-  def update(sort_by="ASC")
+  def update
     message = false
-    order_clause = "#{sort_by}"
 
     # user = User.where("id = '#{params[:user][:id]}'")[0]
     user = User.where("id = '#{params[:user][:id]}'")[0]
-    all_user = User.where("id = '#{params[:user][:id]}'").order(order_clause)
+    sort = order_clause("#{params[:sort_by]}")
+    all_user = User.where("id = '#{params[:user][:id]}'").order(sort)
 
     if user
       user.update(user_params_without_password)
